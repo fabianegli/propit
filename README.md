@@ -6,7 +6,7 @@
 Glue and Grease for Proteomics Pipelines.
 
 * PyPI package: https://pypi.org/project/propit/
-* Free software: MIT License
+* Free software: GPLv3
 * Documentation: https://propit.readthedocs.io.
 
 ## Credits
