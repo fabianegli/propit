@@ -69,5 +69,37 @@ def read_comet_pin_combined(comet_output_dir: Path):
     return df
 
 
+def read_comet_txt_combined(comet_output_dir: Path):
+    if not comet_output_dir.is_dir():
+        raise ValueError(f"{comet_output_dir=} must be a directory.")
+
+    decoy_files = sorted(comet_output_dir.glob("*.decoy.txt"))
+
+    if not decoy_files:
+        raise ValueError("Decoys are required.")
+
+    dfs = []
+
+    for decoy_file in decoy_files:
+        print(decoy_file)
+        stem = decoy_file.name.removesuffix(".decoy.txt")
+        target_file = comet_output_dir / (stem + ".txt")
+        decoys = pd.read_table(decoy_file, low_memory=False, skiprows=1).assign(Label=-1)
+        targets = pd.read_table(target_file, low_memory=False, skiprows=1).assign(Label=1)
+        dfs.append(decoys)
+        dfs.append(targets)
+
+    df = pd.concat(dfs, ignore_index=True).assign(
+        file=stem,
+        SpecId=lambda x: (
+            x.file.str.cat(x.scan.astype("str"), sep="_")
+            .str.cat(x.charge.astype("str"), sep="_")
+            .str.cat(x.num.astype("str"), sep="_")
+        ),
+    )
+
+    return df
+
+
 def read_percolator_target(target_file):
     return pd.read_table(target_file, low_memory=False).assign(PSMId=lambda x: x.PSMId.map(os.path.basename))
