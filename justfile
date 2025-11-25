@@ -53,12 +53,6 @@ tag:
     git tag -a v{{VERSION}} -m "Creating version v{{VERSION}}"
     git push origin v{{VERSION}}
 
-# remove all build, test, coverage and Python artifacts
-clean: 
-	clean-build
-	clean-pyc
-	clean-test
-
 # remove build artifacts
 clean-build:
 	rm -fr build/
@@ -79,3 +73,6 @@ clean-test:
 	rm -f .coverage
 	rm -fr htmlcov/
 	rm -fr .pytest_cache
+
+# remove all build, test, coverage and Python artifacts
+clean: clean-build clean-pyc clean-test
