@@ -26,8 +26,10 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Build release distributions
+      - name: Install uv
         uses: astral-sh/setup-uv@v6
+      
+      - name: Build release distributions
         run: |
           uv build
 
