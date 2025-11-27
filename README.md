@@ -1,7 +1,6 @@
 # Proteomics Pipeline Toolkit
 
 ![PyPI version](https://img.shields.io/pypi/v/propit.svg)
-[![Documentation Status](https://readthedocs.org/projects/propit/badge/?version=latest)](https://propit.readthedocs.io/en/latest/?version=latest)
 
 Glue and Grease for Proteomics Pipelines.
 
