@@ -521,6 +521,7 @@ def sage_results_2_generic_flashlfq_input(sage_output_dir, flashlfq_wd):
 def strip_deltacn_col(pin_file: Path, output_dir: Path | None = None):
     logger.info(f"Dropping column 'deltCn' from {pin_file.absolute()}")
     no_deltacn_dir = output_dir or pin_file.parent / "no_deltaCn"
+    # TODO: also remove other columns with errors
     no_deltacn_dir.mkdir(exist_ok=True)
     stripped_pin_file = no_deltacn_dir / pin_file.name
     (
