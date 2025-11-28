@@ -43,21 +43,30 @@ def comet_perc_generic_flashlfqinput(
     percolator_output_file,
     generic_flashlfq_file,
     max_q_value=0.01,
+    crux=False,
 ):
     percolator_output_file = Path(percolator_output_file).absolute()
     comet_out_dir = Path(comet_out_dir).absolute()
     generic_flashlfq_file = Path(generic_flashlfq_file).absolute()
 
     logger.info("Reading txt files ...")
-    combined = read_comet_txt_combined(comet_out_dir)
+    combined = read_comet_txt_combined(comet_out_dir, crux)
     logger.info("Done reading txt files.")
 
     logger.info("Generate mappings ...")
     combined["file_scan"] = combined.file.str.cat(combined.scan.astype("str"), sep="_")
 
     map_filescan_rt_sec = make_mapping(combined, "file_scan", "retention_time_sec")
-    peptide_to_calcmass_map = make_mapping(combined, _from="modified_peptide", _to="calc_neutral_mass")
-    modified_to_base_peptide_map = make_mapping(combined, _from="modified_peptide", _to="plain_peptide")
+    if crux:
+        modified_peptide_col = "modified sequence"
+        neutral_mass_col = "spectrum neutral mass"
+        base_sequence = "sequence"
+    else:
+        modified_peptide_col = "modified_peptide"
+        neutral_mass_col = "calc_neutral_mass"
+        base_sequence = "plain_peptide"
+    peptide_to_calcmass_map = make_mapping(combined, _from=modified_peptide_col, _to=neutral_mass_col)
+    modified_to_base_peptide_map = make_mapping(combined, _from=modified_peptide_col, _to=base_sequence)
 
     logger.info("... finished the mappings.")
 
