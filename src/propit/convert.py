@@ -391,7 +391,7 @@ def flashlfq_peptides_to_proteobench(flashlfq_output_dir: Path):
         **{
             "Sequence": lambda x: x["Base Sequence"],
             "Proteins": lambda x: x["Protein Groups"],
-            "Charge": 0,
+            "Charge": 0,  # peptides are combined from charge states
             "Modified sequence": lambda x: x["Sequence"],
             "LFQ_Orbitrap_DDA_Condition_A_Sample_Alpha_01": lambda x: x[
                 "Intensity_LFQ_Orbitrap_DDA_Condition_A_Sample_Alpha_01"
