@@ -10,7 +10,12 @@ import pandas as pd
 import peptacular
 
 from .constant import FLASHLFQ_GENERIC_INPUT_COLUMNS, PROTEOBENCH_GENERIC_UPLOAD_COLUMNS
-from .read import read_comet_pin_combined, read_percolator_target, read_pin_tab, read_psms_tab
+from .read import (
+    read_comet_pin_combined,
+    read_percolator_target,
+    read_pin_tab,
+    read_psms_tab,
+)
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
