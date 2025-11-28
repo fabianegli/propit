@@ -9,13 +9,13 @@ from pathlib import Path
 import pandas as pd
 import peptacular
 
-from .constant import FLASHLFQ_GENERIC_INPUT_COLUMNS, PROTEOBENCH_GENERIC_UPLOAD_COLUMNS
-from .read import (
-    read_comet_pin_combined,
-    read_percolator_target,
-    read_pin_tab,
-    read_psms_tab,
-)
+from .constant import FLASHLFQ_GENERIC_INPUT_COLUMNS
+from .constant import PROTEOBENCH_GENERIC_UPLOAD_COLUMNS
+from .read import read_comet_pin_combined
+from .read import read_comet_txt_combined
+from .read import read_percolator_target
+from .read import read_pin_tab
+from .read import read_psms_tab
 
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
@@ -98,37 +98,6 @@ def comet_perc_generic_flashlfqinput(
     logger.info(f"{gen_flfq.columns=}")
 
     return gen_flfq
-
-
-def read_comet_txt_combined(comet_output_dir: Path):
-    comet_output_dir = Path(comet_output_dir)
-
-    decoy_files = sorted(Path(comet_output_dir).glob("*.decoy.txt"))
-
-    if not decoy_files:
-        raise ValueError("Decoys are required.")
-
-    dfs = []
-
-    for decoy_file in decoy_files:
-        logger.info(decoy_file)
-        stem = decoy_file.name.removesuffix(".decoy.txt")
-        target_file = comet_output_dir / (stem + ".txt")
-        decoys = pd.read_table(decoy_file, low_memory=False, skiprows=1).assign(Label=-1, file=stem)
-        logger.info(target_file)
-        targets = pd.read_table(target_file, low_memory=False, skiprows=1).assign(Label=1, file=stem)
-        dfs.append(decoys)
-        dfs.append(targets)
-
-    df = pd.concat(dfs, ignore_index=True).assign(
-        SpecId=lambda x: (
-            x.file.str.cat(x.scan.astype("str"), sep="_")
-            .str.cat(x.charge.astype("str"), sep="_")
-            .str.cat(x.num.astype("str"), sep="_")
-        )
-    )
-
-    return df
 
 
 def charge_n_to_precursor_charge(df: pd.DataFrame) -> pd.Series:

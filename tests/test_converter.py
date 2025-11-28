@@ -13,7 +13,10 @@ TEST_DATA_PERCOLATOR = TEST_DATA / "percolator-output-small"
 @pytest.fixture()
 def p2f_parsed():
     p2f = Percolator2FlashLFQ(
-        percolator_output_dir=TEST_DATA_PERCOLATOR, max_q_value=0.01, remove_contaminants=True, cleanup=False
+        percolator_output_dir=TEST_DATA_PERCOLATOR,
+        max_q_value=0.01,
+        remove_contaminants=True,
+        cleanup=False,
     )
     p2f.copmute_generic_flashlfq_input()
     return p2f
