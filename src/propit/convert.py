@@ -17,7 +17,7 @@ from .read import (
     read_psms_tab,
 )
 
-logger = logging.getLogger()
+logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
 console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.INFO)
@@ -48,11 +48,11 @@ def comet_perc_generic_flashlfqinput(
     comet_out_dir = Path(comet_out_dir).absolute()
     generic_flashlfq_file = Path(generic_flashlfq_file).absolute()
 
-    print("Reading txt files ...")
+    logger.info("Reading txt files ...")
     combined = read_comet_txt_combined(comet_out_dir)
-    print("Done reading txt files.")
+    logger.info("Done reading txt files.")
 
-    print("Generate mappings ...")
+    logger.info("Generate mappings ...")
     combined["file_scan"] = combined.file.str.cat(combined.scan.astype("str"), sep="_")
 
     map_filescan_rt_sec = make_mapping(combined, "file_scan", "retention_time_sec")
@@ -63,7 +63,7 @@ def comet_perc_generic_flashlfqinput(
     peptide_to_calcmass_map = make_mapping(combined, _from="modified_peptide", _to="calc_neutral_mass")
     modified_to_base_peptide_map = make_mapping(combined, _from="modified_peptide", _to="plain_peptide")
 
-    print("... finished the mappings.")
+    logger.info("... finished the mappings.")
 
     targets = read_percolator_target(percolator_output_file)
 
@@ -85,12 +85,12 @@ def comet_perc_generic_flashlfqinput(
         .filter(items=FLASHLFQ_GENERIC_INPUT_COLUMNS)
     )
 
-    print("Done preparing pin data.")
+    logger.info("Done preparing pin data.")
 
-    print(f"Writing generic FlashLFQ file: {generic_flashlfq_file.absolute()}")
+    logger.info(f"Writing generic FlashLFQ file: {generic_flashlfq_file.absolute()}")
     gen_flfq.to_csv(generic_flashlfq_file, sep="\t", index=False)
 
-    print(f"{gen_flfq.columns=}")
+    logger.info(f"{gen_flfq.columns=}")
 
     return gen_flfq
 
@@ -106,11 +106,11 @@ def read_comet_txt_combined(comet_output_dir: Path):
     dfs = []
 
     for decoy_file in decoy_files:
-        print(decoy_file)
+        logger.info(decoy_file)
         stem = decoy_file.name.removesuffix(".decoy.txt")
         target_file = comet_output_dir / (stem + ".txt")
         decoys = pd.read_table(decoy_file, low_memory=False, skiprows=1).assign(Label=-1, file=stem)
-        print(target_file)
+        logger.info(target_file)
         targets = pd.read_table(target_file, low_memory=False, skiprows=1).assign(Label=1, file=stem)
         dfs.append(decoys)
         dfs.append(targets)
@@ -201,7 +201,7 @@ class Percolator2FlashLFQ:
         logger.info("Preparing psms data ...")
 
         self.max_q_value = max_q_value
-        print(self.psms_tab.columns)
+        logger.info(self.psms_tab.columns)
         self.psms_tab_prepared = (
             self.psms_tab.assign(filename=lambda x: x.PSMId.str.rsplit("_", n=2, expand=True).iloc[:, 0])
             .rename(
