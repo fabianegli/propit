@@ -19,38 +19,6 @@ console_handler.setLevel(logging.INFO)
 logger.addHandler(console_handler)
 
 
-def make_FlashLFQ_happy(df):
-    return df.assign(
-        **{
-            "Full Sequence": lambda x: x["Full Sequence"]
-            .str.replace(
-                "C",
-                "C[+57.021464]",
-                # '',
-                # "C[Common Fixed:Carbamidomethyl on C]",
-                # "C[Carbamidomethyl]",
-                # r"[MOD:00412]"
-            )
-            .str.replace(
-                "n[42.0106]",
-                "n[+42.010565]",
-                # "",
-                # "[Common Biological:Acetylation on X]"
-                # "[N-Acetyl]"
-                # "[MOD:00408]",
-            )
-            .str.replace(
-                "M[15.9949]",
-                "M[+15.994915]",
-                # '',
-                # "M[Common Variable:Oxidation on M]",
-                # "[Oxidation]",
-                # r"[MOD:00412]"
-            )
-        }
-    )
-
-
 def comet_pin_to_percolator_pin(comet_output_dir: Path, pin_out_file: Path = Path("../unambiguous-pin.pin")):
     pins = read_comet_pin_combined(comet_output_dir)
     lape = pins[["Label", "Peptide"]]
@@ -109,7 +77,6 @@ def comet_perc_generic_flashlfqinput(
                 "Protein Accession": lambda x: x.proteinIds,
             }
         )
-        .pipe(make_FlashLFQ_happy)
         .filter(
             items=[
                 "File Name",
