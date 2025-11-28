@@ -1,3 +1,5 @@
+# © Fabian Egli, FGCZ, ETHZ
+# GPLv3+
 """Console script for propit."""
 
 from pathlib import Path
