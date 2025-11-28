@@ -3,20 +3,11 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
+from propit.constant import FLASHLFQ_GENERIC_INPUT_COLUMNS
 from propit.convert import Percolator2FlashLFQ
 
 TEST_DATA = Path(__file__).parent / "test_data"
 TEST_DATA_PERCOLATOR = TEST_DATA / "percolator-output-small"
-
-GENERIC_FLASHLFQ_INPUT_COLUMNS = [
-    "File Name",
-    "Scan Retention Time",
-    "Precursor Charge",
-    "Base Sequence",
-    "Full Sequence",
-    "Peptide Monoisotopic Mass",
-    "Protein Accession",
-]
 
 
 @pytest.fixture()
@@ -45,4 +36,4 @@ def test_percolator_to_flashlfq_charge(p2f_parsed, charge):
 
 
 def test_generic_flashlfq_format(p2f_parsed):
-    assert p2f_parsed.generic_flashlfq_input.columns.identical(pd.Index(GENERIC_FLASHLFQ_INPUT_COLUMNS))
+    assert p2f_parsed.generic_flashlfq_input.columns.identical(pd.Index(FLASHLFQ_GENERIC_INPUT_COLUMNS))

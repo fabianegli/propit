@@ -77,17 +77,7 @@ def comet_perc_generic_flashlfqinput(
                 "Protein Accession": lambda x: x.proteinIds,
             }
         )
-        .filter(
-            items=[
-                "File Name",
-                "Scan Retention Time",
-                "Precursor Charge",
-                "Base Sequence",
-                "Full Sequence",
-                "Peptide Monoisotopic Mass",
-                "Protein Accession",
-            ]
-        )
+        .filter(items=FLASHLFQ_GENERIC_INPUT_COLUMNS)
     )
 
     print("Done preparing pin data.")
@@ -437,17 +427,7 @@ def sage_results_2_generic_flashlfq_input(sage_output_dir, flashlfq_wd):
                 "Protein Accession": lambda x: x.proteins,
             }
         )
-        .filter(
-            items=[
-                "File Name",
-                "Scan Retention Time",
-                "Precursor Charge",
-                "Base Sequence",
-                "Full Sequence",
-                "Peptide Monoisotopic Mass",
-                "Protein Accession",
-            ]
-        )
+        .filter(items=FLASHLFQ_GENERIC_INPUT_COLUMNS)
     )
 
     # From https://github.com/smith-chem-wisc/FlashLFQ/wiki/Identification-Input-Formats
