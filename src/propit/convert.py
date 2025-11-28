@@ -56,10 +56,6 @@ def comet_perc_generic_flashlfqinput(
     combined["file_scan"] = combined.file.str.cat(combined.scan.astype("str"), sep="_")
 
     map_filescan_rt_sec = make_mapping(combined, "file_scan", "retention_time_sec")
-    # specid_to_rt_map = make_mapping(combined, _from="SpecId", _to="retention_time_sec")
-    # specid_to_file_map = make_mapping(combined, _from="SpecId", _to="file")
-    # specid_to_charge_map = make_mapping(combined, _from="SpecId", _to="charge")
-    # specid_to_calcmass_map = make_mapping(combined, _from="SpecId", _to="calc_neutral_mass")
     peptide_to_calcmass_map = make_mapping(combined, _from="modified_peptide", _to="calc_neutral_mass")
     modified_to_base_peptide_map = make_mapping(combined, _from="modified_peptide", _to="plain_peptide")
 
