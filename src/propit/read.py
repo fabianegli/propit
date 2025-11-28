@@ -90,19 +90,23 @@ def read_comet_txt_combined(comet_output_dir: Path, crux=False):
 
     for decoy_file in decoy_files:
         stem = decoy_file.name.removesuffix(".decoy.txt")
-        target_file = comet_output_dir / (stem + ".txt")
-        decoys = pd.read_table(decoy_file, low_memory=False, skiprows=1).assign(Label=-1)
-        targets = pd.read_table(target_file, low_memory=False, skiprows=1).assign(Label=1)
+        target_file_extension = ".target.txt" if crux else ".txt"
+        target_file = comet_output_dir / (stem + target_file_extension)
+        skiprows = 0 if crux else 1
         logger.info(f"Reading {decoy_file} ...")
+        decoys = pd.read_table(decoy_file, low_memory=False, skiprows=skiprows).assign(Label=-1)
+        logger.info(f"Reading {target_file} ...")
+        targets = pd.read_table(target_file, low_memory=False, skiprows=skiprows).assign(Label=1)
         dfs.append(decoys)
         dfs.append(targets)
 
+    psm_rank_col = "xcorr rank" if crux else "num"
     df = pd.concat(dfs, ignore_index=True).assign(
         file=stem,
         SpecId=lambda x: (
             x.file.str.cat(x.scan.astype("str"), sep="_")
             .str.cat(x.charge.astype("str"), sep="_")
-            .str.cat(x.num.astype("str"), sep="_")
+            .str.cat(x[psm_rank_col].astype("str"), sep="_")
         ),
     )
 
